@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fauji Financial Readiness Assessment | Hum Fauji Initiatives</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" onerror="window.__qrFailed=true"></script>
+<style>
+  :root{
+    --navy:#1A3A6B; --navy-dark:#0F2544; --fern:#2D6A4F; --fern-light:#52916F;
+    --gold:#C9A961; --gold-light:#E4CE96; --paper:#F6F3EC; --ink:#20242B; --ink-soft:#5A6270;
+    --red:#B23A2E; --amber:#C97B2E; --olive:#9C8A2E; --olive-army:#55642E; --olive-army-dark:#3E4A20;
+    --line:#DAD3C2; --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Georgia','Times New Roman',serif; background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased;}
+  .sans{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+  .grain{position:fixed; inset:0; pointer-events:none; opacity:0.035; z-index:0; background-image:repeating-linear-gradient(0deg,#000 0px,transparent 1px,transparent 2px);}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px 80px; position:relative; z-index:1;}
+
+  .letterhead{background:linear-gradient(160deg, var(--navy) 0%, var(--navy-dark) 100%); color:#fff; padding:34px 26px 28px; margin:0 -20px 0; position:relative; overflow:hidden;}
+  .letterhead::after{content:""; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border:1px solid rgba(201,169,97,0.28); border-radius:50%;}
+  .letterhead::before{content:""; position:absolute; right:-20px; top:-20px; width:160px; height:160px; border:1px solid rgba(201,169,97,0.22); border-radius:50%;}
+  .crest-row{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .crest{width:44px; height:44px; border-radius:50%; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Georgia',serif; font-weight:bold; color:var(--gold); font-size:18px; background:rgba(255,255,255,0.04);}
+  .brandline{font-family:'Segoe UI',sans-serif; letter-spacing:0.16em; font-size:11px; text-transform:uppercase; color:var(--gold-light); opacity:0.9;}
+  .brandline b{color:#fff;}
+  h1.title{font-size:30px; line-height:1.22; margin:0 0 8px; font-weight:normal;}
+  h1.title em{font-style:normal; color:var(--gold-light); display:block; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; font-family:'Segoe UI',sans-serif;}
+  .sub{font-family:'Segoe UI',sans-serif; font-size:14.5px; color:#D9E0EC; max-width:520px; line-height:1.55; margin:0;}
+  .ledger-tag{display:inline-block; margin-top:16px; font-family:'Segoe UI',sans-serif; font-size:11.5px; letter-spacing:0.06em; color:var(--navy-dark); background:var(--gold-light); padding:5px 12px; border-radius:2px;}
+
+  .card{background:var(--card); border:1px solid var(--line); padding:28px 26px; margin-top:22px;}
+  .section-label{font-family:'Segoe UI',sans-serif; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--fern); font-weight:600; margin-bottom:10px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-family:'Segoe UI',sans-serif; font-size:12.5px; color:var(--ink-soft); margin-bottom:5px; letter-spacing:0.02em;}
+  .field input, .field select{width:100%; padding:11px 12px; border:1px solid var(--line); background:#FCFAF5; font-size:14.5px; font-family:'Segoe UI',sans-serif; color:var(--ink); border-radius:2px;}
+  .field input:focus, .field select:focus{outline:none; border-color:var(--fern);}
+  .field-row{display:flex; gap:14px;}
+  .field-row .field{flex:1;}
+
+  .btn{font-family:'Segoe UI',sans-serif; font-weight:600; font-size:14.5px; letter-spacing:0.02em; padding:14px 26px; border:none; border-radius:2px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:transform .15s ease, box-shadow .15s ease;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--navy); color:#fff;}
+  .btn-primary:hover{box-shadow:0 6px 16px rgba(26,58,107,0.32);}
+  .btn-gold{background:var(--gold); color:var(--navy-dark);}
+  .btn-gold:hover{box-shadow:0 6px 16px rgba(201,169,97,0.4);}
+  .btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--navy);}
+  .btn-sm{padding:9px 16px; font-size:13px;}
+  .btn-block{width:100%; justify-content:center;}
+  .btn:disabled{opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none;}
+
+  .quiz-topline{display:flex; justify-content:space-between; align-items:center; font-family:'Segoe UI',sans-serif; font-size:12px; color:var(--ink-soft); margin-bottom:14px; letter-spacing:0.04em;}
+  .service-no{color:var(--fern); font-weight:700;}
+  .progress-track{height:5px; background:var(--line); border-radius:3px; overflow:hidden; margin-bottom:26px;}
+  .progress-fill{height:100%; background:linear-gradient(90deg, var(--fern), var(--gold)); width:0%; transition:width .4s ease;}
+  .qnum{font-family:'Segoe UI',sans-serif; font-size:12px; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase; margin-bottom:10px;}
+  .qtext{font-size:21px; line-height:1.4; margin:0 0 26px; color:var(--navy-dark);}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{font-family:'Segoe UI',sans-serif; text-align:left; padding:15px 18px; border:1.5px solid var(--line); background:#FCFAF5; border-radius:2px; cursor:pointer; font-size:15px; color:var(--ink); display:flex; align-items:center; justify-content:space-between; transition:all .15s ease;}
+  .opt:hover{border-color:var(--fern); background:#F2F7F4;}
+  .opt .dot{width:9px;height:9px;border-radius:50%; border:1.5px solid var(--ink-soft); flex-shrink:0;}
+  .opt.selected{border-color:var(--fern); background:var(--fern); color:#fff;}
+  .opt.selected .dot{background:var(--gold); border-color:var(--gold);}
+  .quiz-nav{display:flex; justify-content:space-between; margin-top:24px;}
+  .quiz-nav button.link{background:none;border:none;font-family:'Segoe UI',sans-serif;color:var(--ink-soft);cursor:pointer;font-size:13.5px;}
+  .quiz-nav button.link:disabled{opacity:0.3;cursor:default;}
+
+  .result-head{text-align:center; padding:6px 0 4px;}
+  .result-head .for{font-family:'Segoe UI',sans-serif; font-size:12.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-soft);}
+  .result-head .name{font-size:23px; color:var(--navy-dark); margin:4px 0 0;}
+  .gauge-wrap{display:flex; flex-direction:column; align-items:center; margin:18px 0 6px;}
+  .score-big{font-size:52px; color:var(--navy-dark); margin-top:6px; line-height:1;}
+  .score-big span{font-size:20px; color:var(--ink-soft); font-family:'Segoe UI',sans-serif;}
+  .badge{margin-top:10px; font-family:'Segoe UI',sans-serif; font-weight:700; padding:8px 20px; border-radius:20px; color:#fff; text-transform:uppercase; font-size:12.5px; letter-spacing:0.1em;}
+  .tier-desc{font-family:'Segoe UI',sans-serif; font-size:14.5px; color:var(--ink-soft); text-align:center; max-width:480px; margin:14px auto 0; line-height:1.6;}
+
+  .grid10{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:26px;}
+  .cell{border:1px solid var(--line); border-radius:3px; padding:10px 6px; text-align:center; background:#FCFAF5;}
+  .cell .n{font-family:'Segoe UI',sans-serif; font-size:10.5px; color:var(--ink-soft); letter-spacing:0.06em;}
+  .cell .mark{font-size:18px; margin-top:3px;}
+  .cell.yes{border-color:var(--fern-light); background:#EEF6F1;}
+  .cell.no{border-color:var(--red); background:#FBEEEC;}
+  .cell.unsure{border-color:var(--amber); background:#FBF1E4;}
+  .mark.yes{color:var(--fern);} .mark.no{color:var(--red);} .mark.unsure{color:var(--amber);}
+
+  .report-intro-line{font-style:italic; font-family:'Georgia',serif; color:var(--ink-soft); font-size:14px; text-align:center; margin:0 0 4px;}
+  .report-lead{font-family:'Segoe UI',sans-serif; font-size:14px; color:var(--ink); line-height:1.65; margin:14px 0;}
+  .report-lead.note{font-style:italic; color:var(--ink-soft); font-size:13px;}
+
+  .strength-strip{background:#EEF6F1; border:1px solid var(--fern-light); border-radius:3px; padding:14px 16px; margin-bottom:22px;}
+  .strength-row{display:flex; align-items:flex-start; gap:8px; font-family:'Segoe UI',sans-serif; font-size:13.5px; color:var(--ink); margin-bottom:6px; line-height:1.5;}
+  .strength-row:last-child{margin-bottom:0;}
+  .strength-row .tick{color:var(--fern); font-weight:700;}
+
+  .gap-card{border:1px solid var(--line); border-radius:2px; margin-bottom:22px; overflow:hidden;}
+  .gap-header{background:linear-gradient(180deg, var(--olive-army), var(--olive-army-dark)); color:#fff; padding:11px 16px; font-family:'Segoe UI',sans-serif; font-size:14px; font-weight:700;}
+  .gap-header .gnum{color:var(--gold-light); margin-right:10px; font-weight:800;}
+  .gap-row{padding:14px 16px; border-top:1px solid var(--line); background:#FEFDFA;}
+  .gap-row .label{font-family:'Segoe UI',sans-serif; font-weight:700; font-size:13px; display:flex; align-items:center; gap:7px; margin-bottom:6px;}
+  .gap-row.selfcheck .label{color:var(--fern);}
+  .gap-row.warn .label{color:var(--red);}
+  .gap-row.next .label{color:var(--amber);}
+  .gap-row p{margin:0; font-family:'Segoe UI',sans-serif; font-size:13.5px; line-height:1.62; color:var(--ink);}
+  .gap-row.selfcheck p{font-style:italic; color:var(--ink-soft);}
+
+  .doc-footer{margin-top:30px; padding-top:16px; border-top:1px solid var(--line); text-align:center;}
+  .doc-footer .mini-shield{width:34px; height:34px; margin:0 auto 8px;}
+  .doc-footer .tagline{font-family:'Georgia',serif; font-style:italic; font-size:13px; color:var(--navy-dark); margin-bottom:10px;}
+  .doc-footer .foot-row{font-family:'Segoe UI',sans-serif; font-size:11px; color:var(--ink-soft); display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; text-align:left;}
+  .doc-footer .foot-firm{font-style:italic; font-weight:700;}
+
+  .cta-opt{font-family:'Segoe UI',sans-serif; display:block; width:100%; text-align:left; padding:14px 16px; margin-bottom:10px; border:1.5px solid var(--line); background:#FCFAF5; border-radius:2px; cursor:pointer; font-size:14.5px;}
+  .cta-opt.selected{border-color:var(--navy); background:#EEF2F8;}
+  .disclaimer{font-family:'Segoe UI',sans-serif; font-size:11.5px; color:var(--ink-soft); line-height:1.5; margin:8px 0 18px;}
+  .schedule-confirm-box{background:#EEF6F1; border:1px solid var(--fern-light); padding:14px 16px; border-radius:3px; margin-top:14px; color:var(--fern); font-size:13.5px; font-family:'Segoe UI',sans-serif;}
+
+  .footer-sign{text-align:center; margin-top:34px; font-family:'Segoe UI',sans-serif;}
+  .footer-sign .jai{font-family:'Georgia',serif; font-size:19px; color:var(--navy-dark); margin-bottom:4px;}
+  .footer-sign .from{font-size:13px; color:var(--ink-soft);}
+  .footer-sign .firm{font-size:12px; color:var(--gold); letter-spacing:0.08em; text-transform:uppercase; margin-top:4px;}
+
+  .share-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;}
+  .share-row .btn{flex:1; min-width:160px;}
+
+  .hidden{display:none !important;}
+  .admin-link-row{text-align:center; margin-top:18px;}
+  .admin-link-row a{font-family:'Segoe UI',sans-serif; font-size:11.5px; color:var(--ink-soft); text-decoration:underline; cursor:pointer;}
+
+  .admin-card{background:var(--card); border:1px solid var(--line); padding:28px 26px; margin-top:22px;}
+  .admin-topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:10px;}
+  .admin-topbar h2{font-size:20px; margin:0; color:var(--navy-dark); font-weight:normal;}
+  table.subs{width:100%; border-collapse:collapse; margin-top:14px; font-family:'Segoe UI',sans-serif; font-size:12px;}
+  table.subs th{background:var(--navy); color:#fff; text-align:left; padding:8px 9px; font-weight:600;}
+  table.subs td{padding:8px 9px; border-bottom:1px solid var(--line); vertical-align:top;}
+  table.subs tr.gaps-row td{border-bottom:2px solid var(--line);}
+  table.subs select{font-family:'Segoe UI',sans-serif; font-size:11.5px; padding:4px 6px; border:1px solid var(--line); border-radius:2px;}
+  .tier-pill{display:inline-block; padding:2px 9px; border-radius:10px; color:#fff; font-size:10.5px; letter-spacing:0.03em; white-space:nowrap;}
+  .qr-box{display:flex; gap:22px; flex-wrap:wrap; align-items:flex-start; margin-top:10px;}
+  #qr-canvas-holder{background:#fff; padding:10px; border:1px solid var(--line); width:200px; height:200px; display:flex; align-items:center; justify-content:center;}
+  .empty-state{font-family:'Segoe UI',sans-serif; color:var(--ink-soft); font-size:13.5px; padding:20px 0; text-align:center;}
+  .storage-note{font-family:'Segoe UI',sans-serif; font-size:11.5px; color:var(--ink-soft); background:#FBF1E4; border:1px solid var(--amber); padding:10px 12px; border-radius:3px; margin-top:14px; line-height:1.5;}
+
+  .presenter-screen{position:fixed; inset:0; z-index:80; background:linear-gradient(160deg, var(--navy), var(--navy-dark)); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:40px 24px;}
+  .presenter-title{font-size:clamp(24px,4vw,40px); margin:22px 0 6px; font-weight:normal;}
+  .presenter-sub{font-family:'Segoe UI',sans-serif; font-size:16px; color:var(--gold-light); max-width:520px; line-height:1.6; margin-top:22px;}
+  .presenter-qr-card{background:#fff; padding:22px; border-radius:8px; border:4px solid var(--gold);}
+  .presenter-tag{font-family:'Segoe UI',sans-serif; letter-spacing:0.16em; text-transform:uppercase; font-size:12px; color:var(--gold-light); margin-bottom:4px;}
+  .presenter-close{position:absolute; top:20px; right:24px; background:none; border:1px solid rgba(255,255,255,0.4); color:#fff; padding:8px 14px; border-radius:3px; cursor:pointer; font-family:'Segoe UI',sans-serif; font-size:12.5px;}
+
+  @media (max-width:600px){
+    .grid10{grid-template-columns:repeat(5,1fr);}
+    h1.title{font-size:25px;}
+    .qtext{font-size:18px;}
+    .score-big{font-size:42px;}
+    .field-row{flex-direction:column; gap:0;}
+    table.subs{display:block; overflow-x:auto; white-space:nowrap;}
+  }
+  @media print{ .no-print{display:none !important;} body{background:#fff;} .card{border:none; padding:0; margin-top:16px;} }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div id="main-letterhead" class="letterhead">
+  <div class="wrap" style="padding:0;">
+    <div class="crest-row">
+      <div class="crest">HF</div>
+      <div class="brandline"><b>Hum Fauji Initiatives</b><br>SEBI Registered Investment Adviser</div>
+    </div>
+    <h1 class="title"><em>10 Questions &nbsp;·&nbsp; 60 Seconds &nbsp;·&nbsp; Private to You</em>Fauji Financial<br>Readiness Assessment</h1>
+    <p class="sub">A diagnostic built for the armed forces community — find out where your financial planning stands today, and exactly what to fix before your next posting, course, or command tenure.</p>
+    <div class="ledger-tag">Score out of 50 · Instant Result</div>
+  </div>
+</div>
+
+<!-- ============ ATTENDEE APP ============ -->
+<div id="app-assessment" class="wrap">
+
+  <div id="screen-intro" class="card">
+    <div class="section-label">Before You Begin</div>
+    <p class="sans" style="font-size:14px;color:var(--ink-soft);line-height:1.6;margin-top:0;">Answer honestly — this is a private readiness check, not an exam. Your details are used only to personalise your report and, if you ask for it, to arrange a call back.</p>
+    <div class="field"><label>Rank &amp; Name *</label><input type="text" id="in-name" placeholder="e.g. Sqn Ldr Naveen Kumar"></div>
+    <div class="field-row">
+      <div class="field"><label>Unit &amp; City *</label><input type="text" id="in-unit" placeholder="e.g. AFS Jodhpur"></div>
+      <div class="field"><label>Mobile / WhatsApp *</label><input type="tel" id="in-mobile" placeholder="10-digit number"></div>
+    </div>
+    <div class="field"><label>Email ID *</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+    <button class="btn btn-primary btn-block" id="btn-start" onclick="startQuiz()">Start My Assessment &nbsp;→</button>
+    <div class="admin-link-row no-print"><a onclick="enterAdminMode()">Advisor / Admin Login</a></div>
+  </div>
+
+  <div id="screen-quiz" class="card hidden">
+    <div class="quiz-topline"><span>Fauji Financial Readiness Assessment</span><span class="service-no" id="qcounter">Q1 / 10</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+    <div class="qnum" id="qnum-label">Question 01</div>
+    <div class="qtext" id="qtext"></div>
+    <div class="options" id="options"></div>
+    <div class="quiz-nav"><button class="link" id="btn-back" onclick="prevQuestion()">← Back</button><span></span></div>
+  </div>
+
+  <div id="screen-result" class="card hidden">
+    <div class="result-head">
+      <div class="for sans">Financial Readiness Report For</div>
+      <div class="name" id="res-name">—</div>
+      <div class="sans" style="font-size:12.5px;color:var(--ink-soft);" id="res-unit">—</div>
+    </div>
+    <div class="gauge-wrap">
+      <svg id="gauge-svg" width="300" height="170" viewBox="0 0 300 170"></svg>
+      <div class="score-big" id="res-score">0<span> / 50</span></div>
+      <div class="badge" id="res-badge" style="background:var(--navy);">—</div>
+      <div class="tier-desc" id="res-tierdesc"></div>
+    </div>
+    <div class="section-label" style="margin-top:30px;">Your Answer Snapshot</div>
+    <div class="grid10" id="res-grid"></div>
+    <div class="sans" style="font-size:11.5px;color:var(--ink-soft);margin-top:10px;display:flex;gap:16px;">
+      <span><span style="color:var(--fern);">●</span> Yes</span>
+      <span><span style="color:var(--amber);">●</span> Not Sure</span>
+      <span><span style="color:var(--red);">●</span> No</span>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:28px;" onclick="showScreen('screen-detail')">See My Detailed Report &nbsp;→</button>
+  </div>
+
+  <div id="screen-detail" class="card hidden">
+    <p class="report-intro-line">By the Faujis. For the Faujis.</p>
+    <div class="section-label" style="text-align:center;">10 Financial Gaps Worth Checking, Personalised To Your Answers</div>
+    <p class="report-lead" id="report-lead-text"></p>
+    <p class="report-lead note">Use this as a self-assessment, not a judgement. The purpose is to identify what deserves attention — not to measure where you stand against anyone else.</p>
+
+    <div class="strength-strip" id="strength-strip-wrap">
+      <div class="section-label" style="margin-bottom:8px;">Areas You've Already Got Right</div>
+      <div id="strengths-list"></div>
+    </div>
+
+    <div id="gap-cards"></div>
+
+    <p class="report-lead" style="text-align:center; font-style:italic; color:var(--ink-soft);">Remember: financial readiness is not determined by rank, income, or investment returns. It is determined by how well your finances are aligned with your goals, responsibilities, and future aspirations. The sooner gaps are identified, the easier they are to correct.</p>
+
+    <button class="btn btn-gold btn-block" style="margin:6px 0 26px;" onclick="showScreen('screen-cta')">Discuss This With HFI &nbsp;→</button>
+
+    <div class="doc-footer">
+      <svg class="mini-shield" viewBox="0 0 40 40"><path d="M20 2 L36 8 V19 C36 29 29 35 20 38 C11 35 4 29 4 19 V8 Z" fill="#0F2544" stroke="#C9A961" stroke-width="1.5"/><text x="20" y="24" text-anchor="middle" font-size="11" fill="#E4CE96" font-family="Georgia, serif" font-weight="bold">HF</text></svg>
+      <div class="tagline">By the Faujis. For the Faujis.</div>
+      <div class="foot-row">
+        <span class="foot-firm">Hum Fauji Initiatives®. An ISO 9001:2015 Company.</span>
+        <span class="foot-links">Website | Blog | Facebook | YouTube | Twitter | LinkedIn</span>
+        <span>9999 053 522 | connect@humfauji.in</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-cta" class="card hidden">
+    <div class="section-label">Next Step</div>
+    <p class="sans" style="font-size:15px;color:var(--navy-dark);margin-top:0;">Would you like Hum Fauji Initiatives to help you understand your score?</p>
+    <div class="disclaimer sans">By choosing to be contacted, you agree that Hum Fauji Initiatives may reach out on WhatsApp or phone for a financial diagnostic discussion. This is only an initial conversation and creates no obligation.</div>
+
+    <button class="cta-opt" data-val="contact" onclick="selectCta(this,'contact')">Yes, please contact me for a financial diagnostic discussion</button>
+    <button class="cta-opt" data-val="material" onclick="selectCta(this,'material')">Send me educational material only</button>
+    <button class="cta-opt" data-val="notnow" onclick="selectCta(this,'notnow')">Not now, please</button>
+
+    <div id="schedule-panel" class="hidden">
+      <div class="section-label" style="margin-top:18px;">Pick a Time For Your Call</div>
+      <div class="field-row">
+        <div class="field"><label>Preferred Date</label><input type="date" id="sched-date"></div>
+        <div class="field"><label>Preferred Time</label>
+          <select id="sched-slot">
+            <option value="">Select a slot</option>
+            <option value="Morning (9am–12pm)">Morning (9am–12pm)</option>
+            <option value="Afternoon (12pm–4pm)">Afternoon (12pm–4pm)</option>
+            <option value="Evening (4pm–8pm)">Evening (4pm–8pm)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="confirmSchedule()">Confirm Request</button>
+    </div>
+    <div id="schedule-confirm" class="schedule-confirm-box hidden"></div>
+
+    <div class="share-row no-print">
+      <button class="btn btn-gold" id="btn-whatsapp" onclick="shareWhatsapp()">Share on WhatsApp</button>
+      <button class="btn btn-ghost" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="footer-sign">
+      <div class="jai">Jai Hind</div>
+      <div class="from">Warm Regards,</div>
+      <div class="from"><b>Col. Sanjeev Govila (Retd.)</b></div>
+      <div class="firm">Team · Hum Fauji Initiatives</div>
+      <div class="sans" style="font-size:10.5px;color:var(--ink-soft);margin-top:10px;">RIA Code: INA000018197 &nbsp;|&nbsp; AMFI ARN: 104917</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN APP ============ -->
+<div id="app-admin" class="wrap hidden">
+  <div id="admin-login" class="admin-card">
+    <div class="section-label">Advisor / Admin Access</div>
+    <p class="sans" style="font-size:13.5px;color:var(--ink-soft);margin-top:0;">This area shows every attendee's result and lets you track and update call requests. Enter the admin password to continue.</p>
+    <div class="field"><label>Password</label><input type="password" id="admin-pass" placeholder="Enter admin password"></div>
+    <div id="admin-error" class="sans hidden" style="color:var(--red); font-size:12.5px; margin-bottom:10px;">Incorrect password. Please try again.</div>
+    <button class="btn btn-primary" onclick="attemptAdminLogin()">Login</button>
+    <button class="btn btn-ghost" onclick="exitAdminMode()">Back to Assessment</button>
+  </div>
+
+  <div id="admin-dashboard" class="admin-card hidden">
+    <div class="admin-topbar">
+      <h2>Attendee Dashboard</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" onclick="openPresenterView()">Open Presenter View</button>
+        <button class="btn btn-ghost btn-sm" onclick="exitAdminMode()">Exit Admin</button>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:20px;">Assessment QR Code</div>
+    <p class="sans" style="font-size:13px;color:var(--ink-soft);margin-top:0;">Attendees scan this to open the assessment directly. Update the link once you host this file at a permanent URL.</p>
+    <div class="qr-box">
+      <div id="qr-canvas-holder"></div>
+      <div style="flex:1; min-width:220px;">
+        <div class="field"><label>Assessment URL</label><input type="text" id="qr-url" value=""></div>
+        <button class="btn btn-gold btn-sm" onclick="generateQr()">Generate QR</button>
+        <button class="btn btn-ghost btn-sm" onclick="copyQrUrl()">Copy Link</button>
+        <div id="qr-fail-note" class="storage-note hidden">Couldn't load the QR generator (needs internet access to cdnjs.cloudflare.com). You can still share the link above directly.</div>
+      </div>
+    </div>
+
+    <div class="admin-topbar" style="margin-top:28px;">
+      <div class="section-label" style="margin:0;">Submissions</div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="loadSubmissions()">Refresh</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportCsv()">Export CSV</button>
+      </div>
+    </div>
+    <div id="subs-container"></div>
+    <div class="storage-note">Submissions are stored using this artifact's shared storage, so they're visible to anyone who opens this assessment and logs into admin — not just you. Treat the admin password as a light gate, not a strong security control, and avoid this setup for highly sensitive data.</div>
+  </div>
+</div>
+
+<!-- ============ PRESENTER VIEW ============ -->
+<div id="app-presenter" class="hidden">
+  <div class="presenter-screen">
+    <button class="presenter-close no-print" onclick="window.close(); showScreen('screen-intro'); document.getElementById('app-presenter').classList.add('hidden');">Close</button>
+    <svg width="66" height="66" viewBox="0 0 40 40"><path d="M20 2 L36 8 V19 C36 29 29 35 20 38 C11 35 4 29 4 19 V8 Z" fill="#12305C" stroke="#C9A961" stroke-width="1.5"/><text x="20" y="24" text-anchor="middle" font-size="11" fill="#E4CE96" font-family="Georgia, serif" font-weight="bold">HF</text></svg>
+    <div class="presenter-tag">Hum Fauji Initiatives</div>
+    <div class="presenter-title">Check Your Fauji Financial<br>Readiness Score</div>
+    <div class="presenter-qr-card"><div id="presenter-qr-holder"></div></div>
+    <div class="presenter-sub">Scan with your phone camera · 10 questions · 60 seconds · Private to you</div>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const questions = [
+  { q:"Do you know exactly how much money you can comfortably invest every month after expenses, EMIs and commitments?",
+    tag:"No Clear Monthly Investible Surplus",
+    issue:"You may be investing inconsistently or far below your actual capacity. Without knowing your surplus, you cannot build a reliable savings habit, and irregular investing tends to underperform systematic investing over time.",
+    fix:"Sit down with your last three months of salary credits and actual spends. Subtract all commitments. The remainder is your investible surplus. Even a rough number is better than none — it gives you a starting point." },
+  { q:"Have you written down your major life goals with target amounts and timelines?",
+    tag:"Financial Goals Exist Only in Your Head",
+    issue:"A goal that is not written is a wish. Without a defined target amount and timeline, you cannot calculate how much to save, or whether your current pace is enough. Most underfunded goals begin here.",
+    fix:"Write down your top five financial goals. For each, note the approximate current cost, the year you expect to need the money, and your best guess at the inflation-adjusted future amount. This takes thirty minutes and changes everything." },
+  { q:"Have you estimated the future cost of important family goals like children's education, house purchase, major travel, or retirement?",
+    tag:"Future Costs Have Not Been Calculated With Inflation",
+    issue:"Ignoring inflation is the single biggest reason financial plans fall short. A child's education that costs ₹20 Lakh today can cost ₹55-90 Lakh in ten to fifteen years. Planning at today's prices means you are systematically underinvesting.",
+    fix:"Apply a simple rule: costs roughly double every ten years at 7% inflation, every eight years at 9% inflation. Use this to recalculate every major goal amount. If the result surprises you, it should prompt a change in your monthly investment." },
+  { q:"Have you estimated how much money you may need after retirement, beyond pension?",
+    tag:"Retirement Planning Depends Only on Pension",
+    issue:"The pension covers baseline needs. But lifestyle costs, healthcare, inflation, travel, and unexpected expenses typically exceed the pension by a significant margin, especially in later years. Many officers discover this gap only after retirement, when it is too late to correct.",
+    fix:"Estimate your current monthly household expense. Subtract the likely pension amount. The gap is what your corpus must generate. Multiply the monthly gap by 12, then by 25-30 (based on years in retirement). That is your corpus target, and it is often larger than expected." },
+  { q:"Are your current investments clearly linked to specific goals?",
+    tag:"Investments Are Not Linked To Goals",
+    issue:"Unlinked investments tend to be redeemed for the wrong reasons, at the wrong time. A long-term equity investment that gets withdrawn during a market dip to fund a short-term expense destroys compounding and often results in a loss.",
+    fix:"List your current investments. Against each, write the goal it is meant to serve and the year you plan to use it. Any investment with no goal attached needs a purpose, or needs to be rationalised. Goal-based investing is not a concept; it is a discipline." },
+  { q:"Do you know which investments are meant for short-term, medium-term and long-term needs?",
+    tag:"No Separation Between Short-Term And Long-Term Money",
+    issue:"Money needed in two to three years should not be in equity or volatile instruments. Money not needed for fifteen years should not all sit in FDs or low-return debt. Mismatched allocation either exposes you to unnecessary risk or locks your money in products that cannot grow.",
+    fix:"Categorise your investments by horizon: money needed within three years (low risk — liquid, FD, short-term debt), three to seven years (moderate risk — balanced/hybrid), and beyond seven years (growth-oriented — equity mutual funds, DSOPF, PPF). Ensure each bucket is funded appropriately." },
+  { q:"If your family depends on your income, do you know how much life insurance cover you actually need beyond service/group insurance?",
+    tag:"Life Insurance Requirement Has Never Been Calculated",
+    issue:"Service-linked group insurance and AGIF coverage are often assumed to be sufficient — but they may not account for outstanding loans, children's education costs, spouse's financial independence, or retirement corpus. Underinsurance is one of the most common and costly gaps.",
+    fix:"Calculate your Human Life Value: estimate how much income your family would need to replace, for how many years, after your untimely absence. A general rule of thumb is ten to fifteen times your annual income. Check whether your current total cover — service insurance, AGIF, any personal term policy — meets this benchmark." },
+  { q:"Have you checked whether your existing insurance policies are mainly protection products or investment products?",
+    tag:"Insurance Policies Have Never Been Reviewed",
+    issue:"Many officers hold traditional endowment or money-back policies taken years ago — often at the suggestion of a well-meaning relative or agent. These products typically provide low coverage and low returns. Holding them without review means paying for something that may no longer serve your needs.",
+    fix:"Pull out all your existing policies. For each: identify the type (term, endowment, ULIP, money-back), the annual premium, the sum assured, and the maturity year. Evaluate whether the cover is adequate and whether the product is still appropriate. This is a one-time exercise that often reveals significant duplication or under-coverage." },
+  { q:"If you invest in direct stocks, F&O, crypto or other high-risk products, do you have a clear exit strategy?",
+    tag:"No Exit Strategy For High-Risk Investments",
+    issue:"Without an exit strategy, investment decisions are driven by emotion — greed on the way up, panic on the way down. F&O in particular is a leveraged instrument where losses can exceed the initial investment. Officers have lost significant savings in these instruments without a clear framework for managing risk.",
+    fix:"Before entering any high-risk investment, define two numbers: the level at which you will exit with a profit (target), and the level at which you will accept a loss and exit (stop-loss). Write both down. Do not change them in the moment. If you cannot define these before investing, it may not be the right instrument for you." },
+  { q:"Has your complete financial planning been reviewed professionally in the last 12 months?",
+    tag:"Financial Plan Has Not Been Reviewed In The Past Year",
+    issue:"A financial plan that has not been reviewed is a plan built for a past version of your life. Job changes, postings, promotions, tax rule changes, market shifts, new dependants, and evolving goals all affect the plan. Without periodic review, drift is inevitable and often invisible until a problem occurs.",
+    fix:"Schedule an annual financial review — ideally at the start or end of each financial year. Review whether your goals have changed, whether your investments are on track, whether your insurance cover is current, and whether your tax planning is optimised. If you use an advisor, this review is part of what you should expect from them." }
+];
+
+const answerScore = {yes:5, notsure:2, no:0};
+let currentQ = 0;
+let answers = new Array(questions.length).fill(null);
+let userInfo = {};
+let currentSubmissionKey = null;
+let lastLoadedEntries = [];
+
+/* ================= NAVIGATION ================= */
+function showScreen(id){
+  ['screen-intro','screen-quiz','screen-result','screen-detail','screen-cta'].forEach(s=>{
+    document.getElementById(s).classList.toggle('hidden', s!==id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startQuiz(){
+  const name = document.getElementById('in-name').value.trim();
+  const unit = document.getElementById('in-unit').value.trim();
+  const mobile = document.getElementById('in-mobile').value.trim();
+  const email = document.getElementById('in-email').value.trim();
+  if(!name || !unit || !mobile || !email){ alert('Please fill in all fields marked * before starting.'); return; }
+  userInfo = {name, unit, mobile, email};
+  currentQ = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = questions[currentQ];
+  document.getElementById('qcounter').textContent = `Q${currentQ+1} / ${questions.length}`;
+  document.getElementById('qnum-label').textContent = `Question ${String(currentQ+1).padStart(2,'0')} · ${q.tag}`;
+  document.getElementById('qtext').textContent = q.q;
+  document.getElementById('progress').style.width = ((currentQ)/questions.length*100)+'%';
+  document.getElementById('btn-back').disabled = currentQ===0;
+  const opts = [['yes','Yes'],['no','No'],['notsure','Not Sure']];
+  const container = document.getElementById('options');
+  container.innerHTML = '';
+  opts.forEach(([val,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[currentQ]===val ? ' selected' : '');
+    btn.innerHTML = `<span>${label}</span><span class="dot"></span>`;
+    btn.onclick = () => selectAnswer(val);
+    container.appendChild(btn);
+  });
+}
+function selectAnswer(val){
+  answers[currentQ] = val;
+  if(currentQ < questions.length - 1){ setTimeout(()=>{ currentQ++; renderQuestion(); }, 180); }
+  else { setTimeout(()=>{ finishQuiz(); }, 180); }
+}
+function prevQuestion(){ if(currentQ>0){ currentQ--; renderQuestion(); } }
+
+/* ================= SCORING & RESULTS ================= */
+async function finishQuiz(){
+  const total = answers.reduce((sum,a)=> sum + (answerScore[a]||0), 0);
+  renderResults(total);
+  renderDetail();
+  showScreen('screen-result');
+  await saveSubmission(total, getTier(total).label);
+}
+
+function getTier(score){
+  if(score<=12) return {label:'Financially Vulnerable', hex:'#B23A2E', desc:"Several important areas of financial planning may require immediate attention. Reviewing your goals, protection, and investment strategy can help strengthen your family's financial security."};
+  if(score<=20) return {label:'Needs Attention', hex:'#C97B2E', desc:"Some financial foundations are in place, but there may be gaps that could affect your ability to achieve long-term goals. A structured review can help identify areas for improvement."};
+  if(score<=28) return {label:'Developing Financial Readiness', hex:'#9C8A2E', desc:"You are progressing in the right direction. Strengthening a few key areas can significantly improve your financial preparedness and confidence."};
+  if(score<=39) return {label:'Mission Ready', hex:'#52916F', desc:"You have built a strong financial foundation. Regular reviews and timely adjustments can help keep your financial plan aligned with your evolving goals."};
+  return {label:'Financial Commando', hex:'#2D6A4F', desc:"Excellent financial preparedness. Your planning, protection, and investment decisions reflect a disciplined approach towards securing your family's future."};
+}
+
+function renderResults(score){
+  document.getElementById('res-name').textContent = userInfo.name;
+  document.getElementById('res-unit').textContent = userInfo.unit;
+  document.getElementById('res-score').innerHTML = score + '<span> / 50</span>';
+  const tier = getTier(score);
+  const badge = document.getElementById('res-badge');
+  badge.textContent = tier.label;
+  badge.style.background = tier.hex;
+  document.getElementById('res-tierdesc').textContent = tier.desc;
+  drawGauge(score, tier.hex);
+  const grid = document.getElementById('res-grid');
+  grid.innerHTML = '';
+  answers.forEach((a,i)=>{
+    const cls = a==='yes' ? 'yes' : (a==='no' ? 'no' : 'unsure');
+    const mark = a==='yes' ? '✓' : (a==='no' ? '✕' : '?');
+    const cell = document.createElement('div');
+    cell.className = 'cell ' + cls;
+    cell.innerHTML = `<div class="n sans">Q${i+1}</div><div class="mark ${cls}">${mark}</div>`;
+    grid.appendChild(cell);
+  });
+  document.getElementById('btn-whatsapp').onclick = () => shareWhatsapp(score, tier.label);
+}
+
+function drawGauge(score, colorHex){
+  const svg = document.getElementById('gauge-svg');
+  const cx=150, cy=150, r=120;
+  const bands = [[0,12,'#B23A2E'],[12,20,'#C97B2E'],[20,28,'#9C8A2E'],[28,39,'#52916F'],[39,50,'#2D6A4F']];
+  function pt(scoreVal){ const theta = Math.PI - (scoreVal/50*Math.PI); return { x: cx + r*Math.cos(theta), y: cy - r*Math.sin(theta) }; }
+  function arcPath(s0,s1){ const steps=24; let d=''; for(let i=0;i<=steps;i++){ const s = s0 + (s1-s0)*(i/steps); const p = pt(s); d += (i===0?'M':'L') + p.x.toFixed(2) + ' ' + p.y.toFixed(2) + ' '; } return d; }
+  let svgContent = '';
+  bands.forEach(([s0,s1,col])=>{ svgContent += `<path d="${arcPath(s0,s1)}" fill="none" stroke="${col}" stroke-width="18" stroke-linecap="butt" opacity="0.9"/>`; });
+  [[0,'0'],[12,'12'],[20,'20'],[28,'28'],[39,'39'],[50,'50']].forEach(([val,txt])=>{
+    const lx = cx + (r+22)*Math.cos(Math.PI - (val/50*Math.PI));
+    const ly = cy - (r+22)*Math.sin(Math.PI - (val/50*Math.PI));
+    svgContent += `<text x="${lx}" y="${ly}" font-size="10" fill="#5A6270" font-family="Segoe UI, sans-serif" text-anchor="middle">${txt}</text>`;
+  });
+  const needleTip = pt(score);
+  svgContent += `<line x1="${cx}" y1="${cy}" x2="${needleTip.x.toFixed(2)}" y2="${needleTip.y.toFixed(2)}" stroke="#20242B" stroke-width="3" stroke-linecap="round"/>`;
+  svgContent += `<circle cx="${cx}" cy="${cy}" r="9" fill="#20242B"/><circle cx="${cx}" cy="${cy}" r="4" fill="${colorHex}"/>`;
+  svg.innerHTML = svgContent;
+}
+
+function renderDetail(){
+  const gapWeak = answers.filter(a=>a!=='yes').length;
+  document.getElementById('report-lead-text').textContent =
+    `You answered ${questions.length - gapWeak} of ${questions.length} questions with a confident "Yes". Many serving officers are disciplined savers — but financial discipline and financial readiness are not the same thing. Below is a walkthrough of every area flagged from your answers, in plain language, with one practical next step for each.`;
+
+  const strengths = document.getElementById('strengths-list');
+  const strip = document.getElementById('strength-strip-wrap');
+  strengths.innerHTML = '';
+  let hasStrength = false;
+  answers.forEach((a,i)=>{
+    if(a==='yes'){
+      hasStrength = true;
+      const row = document.createElement('div');
+      row.className = 'strength-row';
+      row.innerHTML = `<span class="tick">✓</span><span><b>${questions[i].tag}:</b> handled well — keep this up as your service situation evolves.</span>`;
+      strengths.appendChild(row);
+    }
+  });
+  strip.classList.toggle('hidden', !hasStrength);
+
+  const gapCards = document.getElementById('gap-cards');
+  gapCards.innerHTML = '';
+  answers.forEach((a,i)=>{
+    if(a==='yes') return;
+    const q = questions[i];
+    const card = document.createElement('div');
+    card.className = 'gap-card';
+    card.innerHTML = `
+      <div class="gap-header"><span class="gnum">GAP ${i+1}</span>${q.tag}</div>
+      <div class="gap-row selfcheck"><div class="label">✅ Self-Check</div><p>${q.q}</p></div>
+      <div class="gap-row warn"><div class="label">⚠️ If This Gap Exists...</div><p>${q.issue}</p></div>
+      <div class="gap-row next"><div class="label">➡️ Next Step</div><p>${q.fix}</p></div>
+    `;
+    gapCards.appendChild(card);
+  });
+  if(gapWeak===0){
+    gapCards.innerHTML = '<p class="report-lead" style="text-align:center;">No gaps flagged from your answers — every question came back a confident "Yes". Keep reviewing annually to stay Mission Ready.</p>';
+  }
+}
+
+function selectCta(el, val){
+  document.querySelectorAll('.cta-opt').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  const panel = document.getElementById('schedule-panel');
+  const conf = document.getElementById('schedule-confirm');
+  if(val==='contact'){
+    panel.classList.remove('hidden');
+    conf.classList.add('hidden');
+  } else {
+    panel.classList.add('hidden');
+    updateSubmissionFields({ctaChoice: val});
+    conf.textContent = val==='material' ? "Noted — we'll send educational material your way." : "Noted — thank you for your time today.";
+    conf.classList.remove('hidden');
+  }
+}
+
+function formatDate(d){ const dt = new Date(d+'T00:00:00'); return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
+
+async function confirmSchedule(){
+  const date = document.getElementById('sched-date').value;
+  const slot = document.getElementById('sched-slot').value;
+  if(!date || !slot){ alert('Please choose both a date and a time slot.'); return; }
+  await updateSubmissionFields({ctaChoice:'contact', schedule:{date, slot}, callStatus:'Pending'});
+  document.getElementById('schedule-panel').classList.add('hidden');
+  const conf = document.getElementById('schedule-confirm');
+  conf.textContent = `Request received — HFI will call you on ${formatDate(date)} during the ${slot} slot.`;
+  conf.classList.remove('hidden');
+}
+
+function shareWhatsapp(score, tierLabel){
+  const s = score !== undefined ? score : answers.reduce((sum,a)=> sum + (answerScore[a]||0), 0);
+  const t = tierLabel !== undefined ? tierLabel : getTier(s).label;
+  const text = encodeURIComponent(`Fauji Financial Readiness Assessment\n\nName: ${userInfo.name}\nUnit: ${userInfo.unit}\nScore: ${s}/50 (${t})\n\nGenerated via Hum Fauji Initiatives — Jai Hind.`);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+/* ================= SHARED STORAGE ================= */
+async function saveSubmission(score, tierLabel){
+  try{
+    if(!window.storage) return;
+    const key = 'submission:' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    currentSubmissionKey = key;
+    const record = {
+      name:userInfo.name, unit:userInfo.unit, mobile:userInfo.mobile, email:userInfo.email,
+      score, tier:tierLabel, answers, ctaChoice:null, schedule:null, callStatus:null,
+      timestamp:new Date().toISOString()
+    };
+    await window.storage.set(key, JSON.stringify(record), true);
+  }catch(e){ console.warn('Could not save submission:', e); }
+}
+async function updateSubmissionFields(fields){
+  if(!currentSubmissionKey || !window.storage) return;
+  try{
+    const existing = await window.storage.get(currentSubmissionKey, true);
+    if(existing){
+      const rec = JSON.parse(existing.value);
+      Object.assign(rec, fields);
+      await window.storage.set(currentSubmissionKey, JSON.stringify(rec), true);
+    }
+  }catch(e){ console.warn('Could not update submission:', e); }
+}
+
+/* ================= ADMIN ================= */
+const ADMIN_PASSWORD = "FaujiAdmin@2026"; // change this before sharing the file with attendees
+
+function enterAdminMode(){
+  document.getElementById('app-assessment').classList.add('hidden');
+  document.getElementById('app-admin').classList.remove('hidden');
+  document.getElementById('admin-login').classList.remove('hidden');
+  document.getElementById('admin-dashboard').classList.add('hidden');
+  document.getElementById('admin-pass').value='';
+  document.getElementById('admin-error').classList.add('hidden');
+}
+function exitAdminMode(){
+  document.getElementById('app-admin').classList.add('hidden');
+  document.getElementById('app-assessment').classList.remove('hidden');
+  showScreen('screen-intro');
+}
+function attemptAdminLogin(){
+  const val = document.getElementById('admin-pass').value;
+  if(val === ADMIN_PASSWORD){
+    document.getElementById('admin-login').classList.add('hidden');
+    document.getElementById('admin-dashboard').classList.remove('hidden');
+    document.getElementById('qr-url').value = baseUrl();
+    loadSubmissions();
+  } else {
+    document.getElementById('admin-error').classList.remove('hidden');
+  }
+}
+function baseUrl(){ return window.location.href.split('?')[0].split('#')[0]; }
+
+function generateQrInto(holder, url, size){
+  if(window.__qrFailed || typeof QRCode === 'undefined'){ return false; }
+  holder.innerHTML = '';
+  new QRCode(holder, {text:url, width:size, height:size, colorDark:"#0F2544", colorLight:"#ffffff"});
+  return true;
+}
+function generateQr(){
+  const holder = document.getElementById('qr-canvas-holder');
+  const url = document.getElementById('qr-url').value.trim();
+  if(!url) return;
+  const ok = generateQrInto(holder, url, 180);
+  document.getElementById('qr-fail-note').classList.toggle('hidden', ok);
+}
+function copyQrUrl(){
+  const input = document.getElementById('qr-url');
+  input.select();
+  document.execCommand('copy');
+}
+function openPresenterView(){
+  window.open(baseUrl() + '?present=1', '_blank');
+}
+
+async function loadSubmissions(){
+  const container = document.getElementById('subs-container');
+  container.innerHTML = '<p class="empty-state">Loading…</p>';
+  if(!window.storage){
+    container.innerHTML = '<p class="empty-state">Storage isn\'t available in this environment, so submissions can\'t be listed here.</p>';
+    return;
+  }
+  try{
+    const listRes = await window.storage.list('submission:', true);
+    if(!listRes || !listRes.keys || listRes.keys.length===0){
+      container.innerHTML = '<p class="empty-state">No submissions yet. Share the QR code or link to get started.</p>';
+      lastLoadedEntries = [];
+      return;
+    }
+    const entries = [];
+    for(const k of listRes.keys){
+      try{ const r = await window.storage.get(k, true); if(r && r.value) entries.push({key:k, data:JSON.parse(r.value)}); }
+      catch(e){ /* skip unreadable key */ }
+    }
+    entries.sort((a,b)=> new Date(b.data.timestamp) - new Date(a.data.timestamp));
+    lastLoadedEntries = entries;
+    renderSubsTable(entries);
+  }catch(e){
+    container.innerHTML = '<p class="empty-state">Could not load submissions right now. Please try refreshing.</p>';
+  }
+}
+function tierColor(label){
+  const map = {'Financially Vulnerable':'#B23A2E','Needs Attention':'#C97B2E','Developing Financial Readiness':'#9C8A2E','Mission Ready':'#52916F','Financial Commando':'#2D6A4F'};
+  return map[label] || '#5A6270';
+}
+function contactPrefLabel(v){
+  if(v==='contact') return 'Wants a call';
+  if(v==='material') return 'Material only';
+  if(v==='notnow') return 'Not now';
+  return '—';
+}
+function renderSubsTable(entries){
+  const container = document.getElementById('subs-container');
+  if(entries.length===0){ container.innerHTML = '<p class="empty-state">No submissions yet.</p>'; return; }
+  const statusOptions = ['Pending','Scheduled','Completed','Not Interested'];
+  const rows = entries.map(({key,data})=>{
+    const sched = data.schedule ? `${formatDate(data.schedule.date)} · ${data.schedule.slot}` : '—';
+    const wantsCall = data.ctaChoice === 'contact';
+    const currentStatus = data.callStatus || 'Pending';
+    const statusCell = wantsCall
+      ? `<select onchange="updateCallStatus('${key}', this.value)">${statusOptions.map(s=>`<option value="${s}" ${currentStatus===s?'selected':''}>${s}</option>`).join('')}</select>`
+      : '—';
+    const gapsList = data.answers.map((a,i)=> a!=='yes' ? questions[i].tag : null).filter(Boolean);
+    return `
+      <tr>
+        <td>${new Date(data.timestamp).toLocaleString('en-IN')}</td>
+        <td>${escapeHtml(data.name)}</td>
+        <td>${escapeHtml(data.unit)}</td>
+        <td>${escapeHtml(data.mobile)}</td>
+        <td>${escapeHtml(data.email)}</td>
+        <td>${data.score}/50</td>
+        <td><span class="tier-pill" style="background:${tierColor(data.tier)};">${escapeHtml(data.tier)}</span></td>
+        <td>${contactPrefLabel(data.ctaChoice)}</td>
+        <td>${sched}</td>
+        <td>${statusCell}</td>
+      </tr>
+      <tr class="gaps-row"><td colspan="10" class="sans" style="font-size:11px;color:var(--ink-soft);background:#FBFAF5;">Gaps flagged: ${gapsList.length ? escapeHtml(gapsList.join(', ')) : 'None'}</td></tr>
+    `;
+  }).join('');
+  container.innerHTML = `<table class="subs"><thead><tr><th>Timestamp</th><th>Name</th><th>Unit</th><th>Mobile</th><th>Email</th><th>Score</th><th>Tier</th><th>Contact Pref.</th><th>Preferred Slot</th><th>Call Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function updateCallStatus(key, status){
+  const entry = lastLoadedEntries.find(e=>e.key===key);
+  if(entry){ entry.data.callStatus = status; }
+  try{ if(window.storage && entry){ await window.storage.set(key, JSON.stringify(entry.data), true); } }
+  catch(e){ console.warn('Could not update call status:', e); }
+}
+
+function exportCsv(){
+  if(!lastLoadedEntries || lastLoadedEntries.length===0){ alert('No submissions to export yet.'); return; }
+  const headers = ['Timestamp','Name','Unit','Mobile','Email','Score','Tier','Contact Pref','Preferred Date','Preferred Slot','Call Status','Gaps Flagged'];
+  const rows = lastLoadedEntries.map(({data})=>{
+    const gaps = data.answers.map((a,i)=> a!=='yes' ? questions[i].tag : null).filter(Boolean).join('; ');
+    return [data.timestamp, data.name, data.unit, data.mobile, data.email, data.score, data.tier, contactPrefLabel(data.ctaChoice), data.schedule?data.schedule.date:'', data.schedule?data.schedule.slot:'', data.callStatus||'', gaps];
+  });
+  const csv = [headers, ...rows].map(row=>row.map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'hfi_readiness_submissions.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ================= INIT ================= */
+(function init(){
+  const today = new Date().toISOString().split('T')[0];
+  const dateInput = document.getElementById('sched-date');
+  if(dateInput) dateInput.min = today;
+
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('present') === '1'){
+    document.getElementById('main-letterhead').classList.add('hidden');
+    document.getElementById('app-assessment').classList.add('hidden');
+    document.getElementById('app-presenter').classList.remove('hidden');
+    const holder = document.getElementById('presenter-qr-holder');
+    const ok = generateQrInto(holder, baseUrl(), 230);
+    if(!ok){ holder.innerHTML = '<p class="sans" style="font-size:12px;color:var(--ink-soft);max-width:200px;">QR generator needs internet access. Share this link instead: ' + baseUrl() + '</p>'; }
+  } else if(params.get('admin') === '1'){
+    enterAdminMode();
+  }
+})();
+</script>
+</body>
+</html>
