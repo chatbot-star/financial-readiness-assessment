@@ -581,31 +581,44 @@ function shareWhatsapp(score, tierLabel){
 }
 
 /* ================= SHARED STORAGE ================= */
-async function saveSubmission(score, tierLabel){
-  try{
-    if(!window.storage) return;
-    const key = 'submission:' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
-    currentSubmissionKey = key;
-    const record = {
-      name:userInfo.name, unit:userInfo.unit, mobile:userInfo.mobile, email:userInfo.email,
-      score, tier:tierLabel, answers, ctaChoice:null, schedule:null, callStatus:null,
-      timestamp:new Date().toISOString()
-    };
-    await window.storage.set(key, JSON.stringify(record), true);
-  }catch(e){ console.warn('Could not save submission:', e); }
-}
-async function updateSubmissionFields(fields){
-  if(!currentSubmissionKey || !window.storage) return;
-  try{
-    const existing = await window.storage.get(currentSubmissionKey, true);
-    if(existing){
-      const rec = JSON.parse(existing.value);
-      Object.assign(rec, fields);
-      await window.storage.set(currentSubmissionKey, JSON.stringify(rec), true);
-    }
-  }catch(e){ console.warn('Could not update submission:', e); }
-}
+const API_URL = "https://script.google.com/macros/s/AKfycbwjcxBPlG3R-pjI7nG9OQV3pakeT3zVTptKXih7x5TAEtySsuqsaWFhJuRBWxanYNDO/exec";
 
+async function saveSubmission(score, tierLabel){
+
+    const payload = {
+        name: userInfo.name,
+        unit: userInfo.unit,
+        mobile: userInfo.mobile,
+        email: userInfo.email,
+        score: score,
+        tier: tierLabel,
+        answers: answers,
+        callback: "",
+        preferredDate: "",
+        preferredTime: ""
+    };
+
+    try{
+
+        await fetch(API_URL,{
+            method:"POST",
+            redirect:"follow",
+            headers:{
+                "Content-Type":"text/plain;charset=utf-8"
+            },
+            body:JSON.stringify(payload)
+        });
+
+        console.log("Saved Successfully");
+
+    }catch(err){
+
+        console.error(err);
+        alert("Unable to save data.");
+
+    }
+
+}
 /* ================= ADMIN ================= */
 const ADMIN_PASSWORD = "FaujiAdmin@2026"; // change this before sharing the file with attendees
 
